@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Garbage Image Classification — Feedback UI</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="title">Garbage Image Classification</div>
+        <div class="sub">Smart Waste Sorting — DEMO</div>
+        <div class="small" id="modelName">Model : mobilenet_v3_small</div>
+      </div>
+      <div class="nav">
+        <button class="btn">Home</button>
+        <button class="btn">Project Overview</button>
+        <button class="btn">Source Code</button>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <div class="card">
+
+          <h2>Upload Image</h2>
+
+          <div class="upload-area" id="uploadArea">
+            <!-- ✅ Status & hasil model -->
+            <div class="model-info">
+              <p id="modelStatus">Model not loaded.</p>
+              <p id="result"></p>
+            </div>
+
+            <div id="placeholder">
+              <svg width="84" height="10" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M12 16v-8" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 12l4-4 4 4" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="#e6e7ea" stroke-width="1.2"/>
+              </svg>
+            </div>
+
+            <img id="preview" alt="preview">
+            
+            <div class="controls">
+              <label class="primary" for="fileInput">Upload Photo / Gallery</label>
+              <input type="file" id="fileInput" accept="image/*">
+              <button class="btn" id="cameraBtn">Use Camera</button>
+            </div>
+
+            <div class="tips">
+              Tips: ambil foto sampah di permukaan datar, pencahayaan baik.
+            </div>
+
+            
+          </div>
+
+          <div class="result" id="resultCard">
+          <div class="header">
+            <div class="badge">Result / Classification</div>
+          </div>
+
+          <div class="prediction" id="predictionArea">
+            <div class="pred-info">
+              <div class="pred-name" id="predClass">Waiting for input...</div>
+
+              <div class="confidence" aria-hidden>
+                <span id="confBar" style="width:0%"></span>
+              </div>
+
+              <div class="small" id="confText">&nbsp;</div>
+            </div>
+          </div>
+
+          <div class="feedback hidden" id="feedbackControls">
+            <div class="icon-btn" id="btnCorrect">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M5 13l4 4L19 7" stroke="#10b981" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Model tepat</span>
+            </div>
+
+            <div class="icon-btn" id="btnWrong">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="#ef4444" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Model salah</span>
+            </div>
+
+            <div class="correction">
+              <select id="correctSelect">
+                <option value="">Pilih kategori yang benar...</option>
+              </select>
+              <button class="btn" id="submitCorrection">Kirim</button>
+            </div>
+          </div>
+
+          <div class="small" style="margin-top:10px">
+            Feedback akan disimpan di lokal (demo). Kamu bisa hubungkan endpoint backend untuk menyimpan ke server.
+          </div>
+        </div>
+
+        </div>
+
+        <footer>© 2025 - AryaHisma</footer>
+      </section>
+
+      <aside class="stats">
+        <div class="card">
+          <h3>Live Stats</h3>
+          <div class="stat-row"><div class="small">Total images</div><div id="statTotal">0</div></div>
+          <div class="stat-row"><div class="small">Feedbacks</div><div id="statFeedback">0</div></div>
+          <div class="stat-row"><div class="small">Estimated accuracy</div><div id="statAcc">—</div></div>
+
+          <h4 style="margin-top:12px;margin-bottom:6px">Top predicted</h4>
+          <ul class="top-list" id="topList">
+            <!-- dynamic -->
+          </ul>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="script/script.js"></script>
+</body>
+</html>

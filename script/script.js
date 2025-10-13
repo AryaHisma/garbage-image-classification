@@ -1,0 +1,318 @@
+// =============================
+//   GARBAGE CLASSIFICATION APP
+// =============================
+
+// --- LABELS SESUAI MODEL ---
+const labels = [
+  "battery", "biological", "cardboard", "clothes",
+  "glass", "metal", "paper", "plastic", "shoes", "trash"
+];
+
+// --- LOAD MODEL ---
+let session;
+
+// Disable upload dulu sampai model siap
+document.getElementById("fileInput").disabled = true;
+document.getElementById("cameraBtn").disabled = true;
+
+async function loadModel() {
+  try {
+    const modelStatus = document.getElementById("modelStatus");
+    modelStatus.innerText = "⏳ Loading model...";
+    modelStatus.style.color = "#888";
+
+    // Load model ONNX
+    session = await ort.InferenceSession.create("model/model_mobilenet_v3_small.onnx");
+    console.log("✅ ONNX model loaded");
+    console.log("Input names:", session.inputNames);
+    console.log("Output names:", session.outputNames);
+
+    // Update tampilan status
+    modelStatus.innerText = "✅ Model loaded successfully";
+    modelStatus.style.color = "#2ecc71"; // hijau lembut
+
+    // Aktifkan upload setelah model siap
+    document.getElementById("fileInput").disabled = false;
+    document.getElementById("cameraBtn").disabled = false;
+
+    // Hilangkan tulisan setelah 2.5 detik
+    setTimeout(() => {
+      modelStatus.innerText = "";
+    }, 1500);
+
+  } catch (err) {
+    console.error("❌ Gagal load model:", err);
+    const modelStatus = document.getElementById("modelStatus");
+    modelStatus.innerText = "❌ Failed to load model";
+    modelStatus.style.color = "#e74c3c"; // merah lembut
+  }
+}
+
+loadModel();
+
+// =============================
+//   UPLOAD HANDLER
+// =============================
+document.getElementById('fileInput').addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById('preview');
+    const placeholder = document.getElementById('placeholder');
+
+    placeholder.classList.add('hidden');
+    preview.classList.remove('hidden');
+
+    preview.src = e.target.result;
+    preview.onload = () => runInference(preview);
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
+// =============================
+//   CAMERA HANDLER (2 tahap)
+// =============================
+let stream = null;
+let videoElement = null;
+
+document.getElementById('cameraBtn').addEventListener('click', async () => {
+  const placeholder = document.getElementById('placeholder');
+  const preview = document.getElementById('preview');
+  const uploadArea = document.getElementById('uploadArea');
+  const controls = document.querySelector('.controls');
+
+  try {
+    // Jika kamera sudah aktif, jangan buka dua kali
+    if (stream) return;
+
+    // Aktifkan kamera
+    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+    // 🔥 Sembunyikan placeholder & preview sementara
+    placeholder.classList.add('hidden');
+    preview.classList.add('hidden');
+
+    // Buat video element (live preview)
+    videoElement = document.createElement('video');
+    videoElement.autoplay = true;
+    videoElement.srcObject = stream;
+    videoElement.style.width = "100%";
+    videoElement.style.maxHeight = "320px";
+    videoElement.style.borderRadius = "8px";
+    videoElement.style.objectFit = "cover";
+    videoElement.style.marginBottom = "8px";
+
+    // Tambahkan sebelum tombol-tombol
+    uploadArea.insertBefore(videoElement, controls);
+
+    // Tombol capture
+    const captureBtn = document.createElement('button');
+    captureBtn.innerText = "📸 Capture Photo";
+    captureBtn.className = "btn";
+    captureBtn.style.marginTop = "8px";
+    controls.insertBefore(captureBtn, controls.firstChild);
+
+    // Tunggu video siap
+    await new Promise((resolve) => {
+      videoElement.onloadedmetadata = () => {
+        videoElement.play();
+        resolve();
+      };
+    });
+
+    // Event capture
+    captureBtn.addEventListener('click', () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = videoElement.videoWidth;
+      canvas.height = videoElement.videoHeight;
+      ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+      // Stop kamera
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+
+      // Hapus video & tombol capture
+      videoElement.remove();
+      captureBtn.remove();
+
+      // Tampilkan hasil ke preview
+      preview.src = canvas.toDataURL("image/png");
+      preview.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+
+      // Jalankan inferensi
+      preview.onload = () => runInference(preview);
+    });
+  } catch (err) {
+    console.error("❌ Gagal akses kamera:", err);
+    alert("Tidak bisa mengakses kamera. Pastikan browser mengizinkan.");
+  }
+});
+
+
+
+
+
+
+
+// =============================
+//   INFERENCE PIPELINE
+// =============================
+async function runInference(imgElement) {
+  if (!session) {
+    document.getElementById("predClass").innerText = "⚙️ Model is still loading...";
+    return;
+  }
+
+  try {
+    const start = performance.now();
+
+    // --- Preprocess ---
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = 224;
+    canvas.height = 224;
+    ctx.drawImage(imgElement, 0, 0, 224, 224);
+
+    const { data } = ctx.getImageData(0, 0, 224, 224);
+    const float32Data = new Float32Array(3 * 224 * 224);
+    for (let i = 0; i < 224 * 224; i++) {
+      float32Data[i] = (data[i * 4] / 255 - 0.485) / 0.229;
+      float32Data[i + 224 * 224] = (data[i * 4 + 1] / 255 - 0.456) / 0.224;
+      float32Data[i + 2 * 224 * 224] = (data[i * 4 + 2] / 255 - 0.406) / 0.225;
+    }
+
+    const inputTensor = new ort.Tensor("float32", float32Data, [1, 3, 224, 224]);
+    const feeds = { [session.inputNames[0]]: inputTensor };
+    const results = await session.run(feeds);
+
+    const end = performance.now();
+    const outputName = session.outputNames[0];
+    const output = Array.from(results[outputName].data);
+
+    // --- Softmax ---
+    const softmax = (arr) => {
+      const maxVal = Math.max(...arr);
+      const exps = arr.map(v => Math.exp(v - maxVal));
+      const sum = exps.reduce((a, b) => a + b, 0);
+      return exps.map(v => v / sum);
+    };
+
+    const probs = softmax(output);
+    const argMax = probs.indexOf(Math.max(...probs));
+    const prediction = labels[argMax];
+    const confidence = (probs[argMax] * 100).toFixed(2);
+
+    // --- Update UI ---
+    document.getElementById("predClass").innerText = prediction;
+    document.getElementById("confBar").style.width = `${confidence}%`;
+    document.getElementById("confText").innerText = `Confidence: ${confidence}%`;
+    document.getElementById("feedbackControls").classList.remove("hidden");
+
+    console.log(`✅ Prediction: ${prediction} (${confidence}%) in ${(end - start).toFixed(1)} ms`);
+
+  } catch (err) {
+    console.error("❌ Error saat inference:", err);
+    document.getElementById("predClass").innerText = "❌ Error during inference";
+  }
+}
+
+
+
+// =============================
+//   FEEDBACK HANDLER
+// =============================
+function showFeedback(isCorrect) {
+  const feedbackText = document.createElement("p");
+  feedbackText.className = "feedback-message";
+  feedbackText.innerText = isCorrect
+    ? "✅ Thanks for your feedback!"
+    : "❌ Thank you! We'll improve the model.";
+
+  document.querySelector(".feedback").innerHTML = "";
+  document.querySelector(".feedback").appendChild(feedbackText);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+// --- Mock prediction (replace with real inference call) ---
+async function predictImage(file){
+// show loading
+predClass.textContent = 'Predicting...'; confBar.style.width = '0%'; confText.textContent=''; feedbackControls.classList.add('hidden');
+
+
+// simulate wait
+await new Promise(r=>setTimeout(r,700));
+
+
+// simulate prediction (random) — replace this block to call your model endpoint
+const predicted = CLASSES[Math.floor(Math.random()*CLASSES.length)];
+const confidence = Math.floor(60 + Math.random()*38); // 60-98
+
+
+// render
+predClass.textContent = predicted;
+confBar.style.width = confidence + '%';
+confText.textContent = confidence + '% confidence';
+feedbackControls.classList.remove('hidden');
+
+
+// save a prediction entry for stats
+saveEntry({type:'pred', predicted, confidence, ts:new Date().toISOString()});
+
+
+// preselect correction dropdown default to first non-equal class
+correctSelect.selectedIndex = 0;
+
+
+// attach quick feedback handlers
+btnCorrect.onclick = ()=>{
+saveEntry({type:'feedback', pred:predicted, predicted:predicted, correct:true, ts:new Date().toISOString()});
+alert('Terima kasih, feedback dicatat: model dinyatakan tepat.');
+};
+btnWrong.onclick = ()=>{
+// open correction selector visually
+correctSelect.focus();
+};
+
+
+submitCorrection.onclick = ()=>{
+const correct = correctSelect.value;
+if(!correct){ alert('Pilih kategori yang benar terlebih dahulu.'); return; }
+saveEntry({type:'feedback', pred:predicted, predicted:predicted, correct:false, correctLabel:correct, ts:new Date().toISOString()});
+alert('Terima kasih, koreksi telah dikirim.');
+};
+}
+
+
+// helper: reset (not shown) but could be added
+*/
