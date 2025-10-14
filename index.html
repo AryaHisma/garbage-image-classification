@@ -61,24 +61,29 @@
           </div>
 
           <div class="result" id="resultCard">
-          <div class="header">
-            <h2>Result / Classification</h2>
-            <!-- <div class="badge">Result / Classification</div> -->
-          </div>
+            <div class="header">
+              <h2>Result / Classification</h2>
+            </div>
 
-          <div class="prediction" id="predictionArea">
+            <div class="prediction" id="predictionArea">
             <div class="pred-info">
-              <div class="pred-name" id="predClass">Waiting for input...</div>
+              <h3 class="pred-title">🔍 Top Predictions</h3>
 
-              <div class="confidence" aria-hidden>
-                <span id="confBar" style="width:0%"></span>
+              <div id="predictionsList" class="predictions-list">
+                <div class="pred-item placeholder">
+                  <div class="pred-name">Waiting for input...</div>
+                  <div class="confidence">
+                    <span class="confBar" style="width:0%"></span>
+                  </div>
+                  <div class="small confText">&nbsp;</div>
+                </div>
               </div>
-
-              <div class="small" id="confText">&nbsp;</div>
             </div>
           </div>
 
-          <div class="feedback hidden" id="feedbackControls">
+
+
+            <div class="feedback hidden" id="feedbackControls">
             <div class="icon-btn" id="btnCorrect">
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M5 13l4 4L19 7" stroke="#10b981" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -111,20 +116,7 @@
         <footer>© 2025 - AryaHisma</footer>
       </section>
 
-      <!-- <aside class="stats">
-        <div class="card">
-          <h3>Live Stats</h3>
-          <div class="stat-row"><div class="small">Total images</div><div id="statTotal">0</div></div>
-          <div class="stat-row"><div class="small">Feedbacks</div><div id="statFeedback">0</div></div>
-          <div class="stat-row"><div class="small">Estimated accuracy</div><div id="statAcc">—</div></div>
-
-          <h4 style="margin-top:12px;margin-bottom:6px">Top predicted</h4>
-          <ul class="top-list" id="topList"> -->
-            <!-- dynamic -->
-          <!-- </ul>
-        </div>
-      </aside> -->
-    </main>
+     </main>
   </div>
 
   <script src="script/script.js"></script>

@@ -22,7 +22,7 @@ async function loadModel() {
     modelStatus.style.color = "#888";
 
     // Load model ONNX
-    session = await ort.InferenceSession.create("model/model_mobilenet_v3_small.onnx");
+    session = await ort.InferenceSession.create("model/model_resnet18.onnx");
     console.log("✅ ONNX model loaded");
     console.log("Input names:", session.inputNames);
     console.log("Output names:", session.outputNames);
@@ -166,17 +166,18 @@ document.getElementById('cameraBtn').addEventListener('click', async () => {
 
 
 
-
-
-
-
-
 // =============================
 //   INFERENCE PIPELINE
 // =============================
 async function runInference(imgElement) {
   if (!session) {
-    document.getElementById("predClass").innerText = "⚙️ Model is still loading...";
+    const container = document.getElementById("predictionsList");
+    container.innerHTML = `
+      <div class="pred-item">
+        <div class="pred-name">⚙️ Model is still loading...</div>
+        <div class="confidence"><span class="confBar" style="width:0%"></span></div>
+      </div>
+    `;
     return;
   }
 
@@ -215,23 +216,46 @@ async function runInference(imgElement) {
     };
 
     const probs = softmax(output);
-    const argMax = probs.indexOf(Math.max(...probs));
-    const prediction = labels[argMax];
-    const confidence = (probs[argMax] * 100).toFixed(2);
+
+    // --- Ambil 3 prediksi teratas ---
+    const top3 = probs
+      .map((p, i) => ({ label: labels[i], confidence: (p * 100).toFixed(2) }))
+      .sort((a, b) => b.confidence - a.confidence)
+      .slice(0, 3);
 
     // --- Update UI ---
-    document.getElementById("predClass").innerText = prediction;
-    document.getElementById("confBar").style.width = `${confidence}%`;
-    document.getElementById("confText").innerText = `Confidence: ${confidence}%`;
-    document.getElementById("feedbackControls").classList.remove("hidden");
+    const container = document.getElementById("predictionsList");
+    container.innerHTML = ""; // Kosongkan tampilan lama
 
-    console.log(`✅ Prediction: ${prediction} (${confidence}%) in ${(end - start).toFixed(1)} ms`);
+    top3.forEach((t, i) => {
+      const item = document.createElement("div");
+      item.className = "pred-item";
+      item.innerHTML = `
+        <div class="pred-name">
+          <span>${i + 1}. ${t.label}</span>
+          <span>${t.confidence}%</span>
+        </div>
+        <div class="confidence">
+          <span class="confBar" style="width:${t.confidence}%"></span>
+        </div>
+      `;
+      container.appendChild(item);
+    });
 
   } catch (err) {
-    console.error("❌ Error saat inference:", err);
-    document.getElementById("predClass").innerText = "❌ Error during inference";
+    console.error("❌ Error during inference:", err);
+    const container = document.getElementById("predictionsList");
+    container.innerHTML = `
+      <div class="pred-item error">
+        <div class="pred-name">❌ Error during inference</div>
+        <div class="confText">Check console for details</div>
+      </div>
+    `;
   }
 }
+
+
+
 
 
 
