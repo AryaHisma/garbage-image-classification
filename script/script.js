@@ -86,37 +86,46 @@ document.getElementById('cameraBtn').addEventListener('click', async () => {
   const controls = document.querySelector('.controls');
 
   try {
-    // Jika kamera sudah aktif, jangan buka dua kali
+    // 🔸 Jika kamera sudah aktif, jangan buka dua kali
     if (stream) return;
 
-    // Aktifkan kamera
-    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    // 🔹 Gunakan kamera belakang jika ada
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "environment" } }, // 👈 kamera belakang
+      audio: false
+    });
 
     // 🔥 Sembunyikan placeholder & preview sementara
     placeholder.classList.add('hidden');
     preview.classList.add('hidden');
 
-    // Buat video element (live preview)
+    // 🔹 Buat elemen video (live preview)
     videoElement = document.createElement('video');
     videoElement.autoplay = true;
+    videoElement.playsInline = true;
     videoElement.srcObject = stream;
-    videoElement.style.width = "100%";
-    videoElement.style.maxHeight = "320px";
-    videoElement.style.borderRadius = "8px";
-    videoElement.style.objectFit = "cover";
-    videoElement.style.marginBottom = "8px";
+
+    // Styling agar pas di card
+    Object.assign(videoElement.style, {
+      width: "100%",
+      maxHeight: "320px",
+      borderRadius: "8px",
+      objectFit: "cover",
+      marginBottom: "8px",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.2)"
+    });
 
     // Tambahkan sebelum tombol-tombol
     uploadArea.insertBefore(videoElement, controls);
 
-    // Tombol capture
+    // 🔹 Tombol Capture
     const captureBtn = document.createElement('button');
     captureBtn.innerText = "📸 Capture Photo";
     captureBtn.className = "btn";
     captureBtn.style.marginTop = "8px";
     controls.insertBefore(captureBtn, controls.firstChild);
 
-    // Tunggu video siap
+    // Tunggu kamera siap
     await new Promise((resolve) => {
       videoElement.onloadedmetadata = () => {
         videoElement.play();
@@ -124,7 +133,7 @@ document.getElementById('cameraBtn').addEventListener('click', async () => {
       };
     });
 
-    // Event capture
+    // Event Capture
     captureBtn.addEventListener('click', () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -132,27 +141,29 @@ document.getElementById('cameraBtn').addEventListener('click', async () => {
       canvas.height = videoElement.videoHeight;
       ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-      // Stop kamera
+      // 🔹 Stop semua track kamera
       stream.getTracks().forEach(track => track.stop());
       stream = null;
 
-      // Hapus video & tombol capture
+      // 🔹 Hapus video & tombol capture
       videoElement.remove();
       captureBtn.remove();
 
-      // Tampilkan hasil ke preview
-      preview.src = canvas.toDataURL("image/png");
+      // 🔹 Tampilkan hasil ke preview
+      preview.src = canvas.toDataURL("image/jpeg", 0.9);
       preview.classList.remove('hidden');
       placeholder.classList.add('hidden');
 
       // Jalankan inferensi
       preview.onload = () => runInference(preview);
     });
+
   } catch (err) {
     console.error("❌ Gagal akses kamera:", err);
-    alert("Tidak bisa mengakses kamera. Pastikan browser mengizinkan.");
+    alert("Tidak bisa mengakses kamera. Pastikan browser mengizinkan akses kamera.");
   }
 });
+
 
 
 
