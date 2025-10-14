@@ -14,11 +14,11 @@ body{
     font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; 
     margin:0; 
     background:linear-gradient(180deg,#eef2f7 0%,var(--bg) 100%); 
-    color:#111
+    color:#111;
 }
 
 .container{
-    max-width:700px;
+    max-width:300px;
     margin:28px auto;
     padding:10px
 }
@@ -66,10 +66,11 @@ video {
 .btn {
   background-color: #2563eb;
   color: white;
-  padding: 8px 14px;
+  padding: 5px 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 0.8rem;
 }
 
 .btn:hover {
@@ -77,41 +78,39 @@ video {
 }
 
 main{
-    display:grid;
-    grid-template-columns:1fr 200px;
-    gap:10px;
-    margin-top:18px;
+    display:block;
+    margin-top:10px;
 }
 
-@media (max-width:800px){
+/* @media (max-width:300px){
     main{grid-template-columns:1fr}
-}
+} */
 
 /* Left column */
 .card{
     background:var(--card);
     border-radius:8px;
-    padding:14px;
+    padding:10px;
     box-shadow:0 6px 18px rgba(13,18,20,0.06);
 }
 
 .card h2{
     text-align:center;
     margin: 8px 0;
-    font-size: 1.5rem;
+    font-size: 0.8rem;
     color: #333;
 }
 
 .upload-area {
-  height: 450px;
+  /* height: 250px; */
   border: 2px dashed var(--glass);
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   flex-direction: column;
-  border-radius: 6px;
+  border-radius: 10px;
   background: linear-gradient(180deg, rgba(15,23,36,0.02), transparent);
-  position: relative;
+  /* position: relative; */
 }
 
 .upload-area img {
@@ -128,11 +127,11 @@ main{
 
 
 #preview {
-  width: 350px;
-  height: 250px;
+  width: 80%;
+  height: 50%;
   object-fit: contain;
   display: block;
-  margin: 0px 5px 5px 5px; /* agar gambar center secara horizontal */
+  margin-bottom: 5px ; 
 }
 
 .controls {
@@ -145,7 +144,8 @@ main{
 input[type=file]{display:none}
 
 .tips{
-    font-size: 0.75rem;  
+    margin-top:2px;
+    font-size: 0.5rem;  
     color: #6b7280;      
     text-align: center;  
     opacity: 0.8;
@@ -159,6 +159,7 @@ input[type=file]{display:none}
     border-radius:6px;
     cursor:pointer;
     text-align: center;
+    font-size: 0.8rem;
 }
 
 /* Result card */
