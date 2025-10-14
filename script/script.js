@@ -242,6 +242,9 @@ async function runInference(imgElement) {
       container.appendChild(item);
     });
 
+    const feedback = document.getElementById('feedbackControls');
+    feedback.classList.remove('hidden');
+
   } catch (err) {
     console.error("❌ Error during inference:", err);
     const container = document.getElementById("predictionsList");
@@ -262,16 +265,18 @@ async function runInference(imgElement) {
 // =============================
 //   FEEDBACK HANDLER
 // =============================
-function showFeedback(isCorrect) {
-  const feedbackText = document.createElement("p");
-  feedbackText.className = "feedback-message";
-  feedbackText.innerText = isCorrect
-    ? "✅ Thanks for your feedback!"
-    : "❌ Thank you! We'll improve the model.";
+document.getElementById('btnCorrect').addEventListener('click', () => {
+  alert("Terima kasih! Model dianggap benar ✅");
+});
 
-  document.querySelector(".feedback").innerHTML = "";
-  document.querySelector(".feedback").appendChild(feedbackText);
-}
+document.getElementById('btnWrong').addEventListener('click', () => {
+  document.querySelector('.correction').style.display = 'flex';
+});
+
+document.getElementById('submitCorrection').addEventListener('click', () => {
+  const val = document.getElementById('correctSelect').value;
+  if (val) alert(`Feedback disimpan: kategori seharusnya "${val}"`);
+});
 
 
 

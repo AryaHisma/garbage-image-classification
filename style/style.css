@@ -258,171 +258,103 @@ input[type=file]{display:none}
 }
 
 
-
-/* .result .header h2{
-    text-align:center;
-    margin: 8px 0;
-    font-size: 0.8rem;
-    color: #333;
-} */
-
-/* .badge{
-    padding:6px 10px;
-    border-radius:999px;
-    background:var(--glass);
-    font-size:13px
-} */
-
-/* .prediction{
-    display:flex;
-    gap:12px;
-    align-items:center;
-    margin-top:12px
+/* Feedback controls */
+.feedback {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
 }
 
-.pred-info{flex:1}
-
-.pred-name{
-    font-weight:700;
-    font-size:18px
+.feedback.hidden {
+  display: none;
 }
 
-.confidence{
-    height:12px;
-    background:var(--glass);
-    border-radius:999px;
-    overflow:hidden;
-    margin-top:8px
-}
-
-.confidence > span{
-    display:block;
-    height:100%;
-    width:0%;
-    background:linear-gradient(90deg,var(--accent),#06b6d4);
-    border-radius:999px
-}
-
-.top3 {
-  margin-top: 10px;
-  font-size: 0.9rem;
-}
-
-.top3 h4 {
-  margin-bottom: 6px;
+/* 🔹 Judul feedback */
+.feedback-title {
+  font-size: 16px;
   font-weight: 600;
-  color: #333;
-}
-
-.top-item {
+  color: #374151;
+  margin: 0 0 6px 0;
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 4px;
 }
 
-.top-item .label {
+/* 🔹 Tombol sejajar */
+.feedback .btn-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.icon-btn {
   flex: 1;
-  color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
-.top-item .bar {
-  flex: 3;
-  height: 6px;
-  background: #eee;
-  border-radius: 4px;
-  overflow: hidden;
+.icon-btn:hover {
+  background: #f3f4f6;
+  transform: scale(1.02);
 }
 
-.top-item .bar .fill {
-  height: 100%;
-  background: linear-gradient(90deg, #4f46e5, #22d3ee);
-  border-radius: 4px;
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
 }
 
-.top-item .score {
-  width: 48px;
-  text-align: right;
-  font-size: 0.8rem;
-  color: #555;
-} */
-
-
-/* Feedback controls */
-.feedback{
-    display:flex;
-    gap:8px;
-    margin-top:12px;
-    align-items:center
+/* 🔹 Dropdown koreksi */
+.correction {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
 
-.icon-btn{
-    display:flex;
-    gap:6px;
-    align-items:center;
-    padding:8px 12px;
-    border-radius:8px;
-    border:1px solid #e6e7ea;
-    background:#fff;
-    cursor:pointer
+.correction select {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
 }
 
-.icon-btn svg{
-    width:16px;
-    height:16px
+.btn {
+  background: #2563eb;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-.correction{
-    margin-left:auto;
-    display:flex;
-    gap:8px
-}
-
-select{
-    padding:8px;
-    border-radius:8px;
-    border:1px solid #e6e7ea
-}
-
-/* Right column */
-.stats{
-    position:sticky;
-    top:20px
-}
-
-.stats h3{margin:0 0 8px 0}
-
-.stat-row{
-    display:flex;
-    justify-content:space-between;
-    padding:10px 12px;
-    border-radius:8px;
-    background:linear-gradient(180deg,#fff, #fbfdff);
-    margin-bottom:8px;
-    border:1px solid #eef2f6
+.btn:hover {
+  background: #1d4ed8;
 }
 
 
 
-.top-list{
-    list-style:none;
-    padding:0;
-    margin:0
-}
 
-.top-list li{
-    display:flex;
-    justify-content:space-between;
-    padding:8px;
-    border-radius:6px
-}
 
-footer{
-    margin-top:18px;
-    text-align:center;
-    color:var(--muted);
-    font-size:13px
-}
 
 /* helper */
 .hidden{display:none}
