@@ -16,17 +16,19 @@
       <div>
         <div class="title">Garbage Image Classification</div>
         <div class="sub">Smart Waste Sorting — DEMO</div>
-        <div class="small" id="modelName">Model : mobilenet_v3_small</div>
+        <div class="small" id="modelName">Model : ResNet18</div>
       </div>
+
       <div class="nav">
-        <button class="btn">Home</button>
-        <button class="btn">Project Overview</button>
-        <button class="btn">Source Code</button>
+        <a href="#" onclick="showPage('home')" class="btn">Home</a>
+        <a href="#" onclick="showPage('project-overview')" class="btn">Project Overview</a>
+        <a href="#" onclick="showPage('source')" class="btn">Source Code</a>
       </div>
     </header>
 
     <main>
-      <section>
+      <!-- HOME -->
+      <section id="home" class="page">
         <div class="card">
 
           <h2>Upload Image</h2>
@@ -92,43 +94,197 @@
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M5 13l4 4L19 7" stroke="#10b981" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span>Model tepat</span>
+                <span>Correct</span>
               </div>
 
               <div class="icon-btn" id="btnWrong">
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M18 6L6 18M6 6l12 12" stroke="#ef4444" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span>Model salah</span>
+                <span>Incorrect</span>
               </div>
             </div>
 
-            <div class="correction">
-              <select id="correctSelect">
-                <option value="">Pilih kategori yang benar...</option>
-              </select>
-              <button class="btn" id="submitCorrection">Kirim</button>
-            </div>
+            <div class="correction hidden" id="correctionSection">
+            <label for="correctSelect">Select the correct category :</label>
+            <select id="correctSelect">
+              <option value="">-- Select category --</option>
+              <option value="battery">Battery</option>
+              <option value="biological">Biological</option>
+              <option value="cardboard">Cardboard</option>
+              <option value="clothes">Clothes</option>
+              <option value="glass">Glass</option>
+              <option value="metal">Metal</option>
+              <option value="paper">Paper</option>
+              <option value="plastic">Plastic</option>
+              <option value="shoes">Shoes</option>
+              <option value="trash">Trash</option>
+            </select>
+            <button class="btn" id="submitCorrection">Kirim</button>
+          </div>
+
           </div>
           </div>
         </div>
+      </section>
 
-        </section>
+      <!-- OVERVIEW -->
+      <div id="project-overview" class="page" style="display:none">
 
-        <footer class="footer-social">
-        <p>© 2025 Arya Hisma</p>
-        <div class="social-links">
+            <!-- Toggle Languange -->
+            <div class="lang-toggle">
+                <button onclick="setLanguage('id')">🇮🇩 Bahasa</button>
+                <button onclick="setLanguage('en')">🇬🇧 English</button>
+            </div>
+
+            <!-- Indonesia -->
+            <section class="overview lang lang-id">
+            <h2>Deskripsi Proyek</h2>
+            <p>
+              <span class="highlight">Garbage Image Classification</span> adalah aplikasi berbasis <b>Artificial Intelligence (AI)</b> yang dirancang untuk mengklasifikasikan berbagai jenis sampah melalui gambar. 
+              Aplikasi ini merupakan versi pengembangan dari proyek sebelumnya yang hanya mampu mengenali tiga kategori sampah, dan kini telah ditingkatkan menjadi mampu mengklasifikasikan hingga 
+              sepuluh kategori, yaitu: 
+              <b>battery</b>, <b>biological</b>, <b>cardboard</b>, <b>clothes</b>, 
+              <b>glass</b>, <b>metal</b>, <b>paper</b>, <b>plastic</b>, <b>shoes</b>, dan <b>trash</b>.
+            </p>
+
+            <p>
+              <b>Cara penggunaan:</b>  
+              Pengguna cukup mengunggah foto sampah melalui browser, kemudian sistem akan secara otomatis mengklasifikasikan jenis sampah berdasarkan model AI yang telah dilatih sebelumnya.  
+              Versi terbaru ini dilengkapi dengan tampilan antarmuka baru serta fitur <b>feedback</b> untuk mengevaluasi kinerja model saat digunakan dalam kondisi dunia nyata.
+            </p>
+
+            <p>
+              Model dilatih menggunakan <b>FastAI</b> dan di-deploy ke web menggunakan <b>ONNX Runtime Web</b>.  
+              Pendekatan ini memungkinkan aplikasi dijalankan langsung di browser tanpa memerlukan server tambahan maupun instalasi khusus.  
+              Berbeda dari versi sebelumnya yang menggunakan model <b>MobileNetV3-Small</b> (ringan dan cocok untuk perangkat seluler), versi ini memanfaatkan <b>ResNet18</b> yang lebih besar namun tetap efisien dijalankan di perangkat seluler berkat format <b>ONNX</b>.
+            </p>
+
+            <h2>Dataset</h2>
+            <p>
+              Proyek ini menggunakan dataset publik dari Kaggle:  
+              <a href="https://www.kaggle.com/datasets/sumn2u/garbage-classification-v2" target="_blank">
+                <b>Garbage Classification V2</b>
+              </a>.
+            </p>
+            <p>
+              Dataset ini digunakan sebagai dasar pelatihan model agar mampu membedakan karakteristik visual antar kategori sampah dengan tingkat akurasi yang baik.
+            </p>
+
+            <h2>Tools</h2>
+            <ul>
+              <li><b><a href="https://www.fast.ai/" target="_blank">FastAI</a></b></li>
+              <li><b><a href="https://onnxruntime.ai/" target="_blank">ONNX Runtime Web</a></b></li>
+              <li><b>
+                <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">HTML</a>, 
+                <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank">CSS</a>, dan 
+                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">JavaScript</a>
+              </b></li>
+            </ul>
+          </section>
+
+
+            <!-- English -->
+            <section class="overview lang lang-en" style="display:none">
+              <h2>Project Description</h2>
+                  <p>
+                    <span class="highlight">Garbage Image Classification</span> is an <b>Artificial Intelligence (AI)</b>-based application designed to classify different types of waste from images.  
+                    This project is an upgraded version of the previous model, which could only recognize three waste categories.  
+                    The new version has been enhanced to classify up to ten categories:  
+                    <b>battery</b>, <b>biological</b>, <b>cardboard</b>, <b>clothes</b>, 
+                    <b>glass</b>, <b>metal</b>, <b>paper</b>, <b>plastic</b>, <b>shoes</b>, and <b>trash</b>.
+                  </p>
+
+                  <p>
+                    <b>How it works:</b>  
+                    Users can simply upload a waste image through the browser, and the system will automatically classify the type of waste based on a pre-trained AI model.  
+                    This version also includes a redesigned interface and a <b>feedback feature</b> to evaluate model performance in real-world scenarios.
+                  </p>
+
+                  <p>
+                    The model was trained using <b>FastAI</b> and deployed to the web via <b>ONNX Runtime Web</b>.  
+                    This approach allows the application to run entirely in the browser — no server or installation required.  
+                    Unlike the previous version that used <b>MobileNetV3-Small</b> (lightweight and suitable for mobile devices),  
+                    this version uses <b>ResNet18</b>, a larger model that still performs efficiently on mobile devices thanks to the <b>ONNX</b> format.
+                  </p>
+
+                  <h2>Dataset</h2>
+                  <p>
+                    The project uses a public dataset from Kaggle:  
+                    <a href="https://www.kaggle.com/datasets/sumn2u/garbage-classification-v2" target="_blank">
+                      <b>Garbage Classification V2</b>
+                    </a>.
+                  </p>
+                  <p>
+                    This dataset serves as the foundation for model training, enabling the system to distinguish visual differences between categories with high accuracy.
+                  </p>
+
+                  <h2>Tools</h2>
+                  <ul>
+                    <li><b><a href="https://www.fast.ai/" target="_blank">FastAI</a></b></li>
+                    <li><b><a href="https://onnxruntime.ai/" target="_blank">ONNX Runtime Web</a></b></li>
+                    <li><b>
+                      <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">HTML</a>, 
+                      <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank">CSS</a>, and 
+                      <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">JavaScript</a>
+                    </b></li>
+                  </ul>
+            </section>
+        </div>
+
+
+      <!-- SOURCE -->
+      <div id="source" class="page" style="display:none">
+            <h2>Source Code & Resources</h2>
+            <p><b>Training Model:</b></p>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li>
+                    <a href="https://www.kaggle.com/code/aryakun/garbage-image-classification-with-fast-ai" target="_blank">
+                        Image Classification with FastAI
+                    </a>
+                </li>
+            </ul>
+
+            <br>
+
+            <p><b>Web Deployment:</b></p>
+            <ul>
+                <a href="https://github.com/AryaHisma/garbage-image-classification" target="_blank">GitHub Repository</a>
+            </ul>
+
+            <br>
+
+            <p><b>Live Demo:</b></p>
+            <ul>
+                <a href="https://aryahisma.github.io/garbage-image-classification" target="_blank">Live Demo</a>
+            </ul>
+
+            <br>
+
+            <p><b>Model:</b></p>
+            <ul>
+                ResNet18 trained with FastAI
+                Exported to ONNX for web inference
+            </ul>
+
+            <br>
+
+            <p><b>Note:</b><br>
+            This project demonstrates Smart Waste Sorting using AI.<br>
+            It shows how machine learning models can be trained, converted, and deployed to a web app for real usage.
+            </p>
+        </div>
+
+      <footer class="footer-social">
+        <p> 2025 - AryaHisma </p>
+        <div class="social-link">
           <a href="https://github.com/aryahisma" target="_blank">
-            <i class="fab fa-github"></i> GitHub
+            <i class="fab fa-github"></i> Github
           </a>
-          <!-- <a href="https://linkedin.com/in/aryahisma" target="_blank">
-            <i class="fab fa-linkedin"></i> LinkedIn
-          </a> -->
         </div>
       </footer>
      </main>
   </div>
-
   <script src="script/script.js"></script>
 </body>
 </html>

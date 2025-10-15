@@ -1,3 +1,4 @@
+/* BASE */
 :root{
     --bg:#f5f6f8;
     --card:#ffffff;
@@ -10,6 +11,7 @@
 
 *{box-sizing:border-box}
 
+/* BODY */
 body{
     font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; 
     margin:0; 
@@ -17,6 +19,7 @@ body{
     color:#111;
 }
 
+/* HEADER */
 .container{
     max-width:300px;
     margin:28px auto;
@@ -86,7 +89,7 @@ main{
     main{grid-template-columns:1fr}
 } */
 
-/* Left column */
+/* HOME */
 .card{
     background:var(--card);
     border-radius:8px;
@@ -121,8 +124,9 @@ main{
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
+
 
 
 
@@ -305,10 +309,11 @@ input[type=file]{display:none}
   background: white;
   border: 1px solid #d1d5db;
   border-radius: 8px;
-  padding: 10px 14px;
+  padding:5px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
+  font: size 10px;
 }
 
 .icon-btn:hover {
@@ -323,19 +328,40 @@ input[type=file]{display:none}
 
 /* 🔹 Dropdown koreksi */
 .correction {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column; /* ✅ Atur vertikal */
+  align-items: center;     /* ✅ Rata tengah horizontal */
+  gap: 8px;                /* ✅ Jarak antar elemen */
+}
+
+.correction label {
+  font-size: 14px;
+  color: #475569;
 }
 
 .correction select {
-  flex: 1;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
+  padding: 6px;
+  width: 200px;
   font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  outline: none;
 }
+
+.correction button {
+  padding: 6px 14px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.correction button:hover {
+  background-color: #1d4ed8;
+}
+
 
 .btn {
   background: #2563eb;
@@ -351,7 +377,75 @@ input[type=file]{display:none}
   background: #1d4ed8;
 }
 
-/* footer */
+/* PROJECT OVERVIEW */
+.overview {
+  max-width: 800px;
+  margin: 1px 1px;
+  background: #fff;
+  padding-top: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: 1px solid black;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  text-align: left;
+}
+
+.overview h2 {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.overview p {
+  font-size: 0.5rem;
+  line-height: 1.6;
+  margin-bottom: 5px;
+  color: #444;
+  text-align: justify;
+}
+
+.overview .goals {
+  margin-top: 5px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-left: 4px solid #27ae60;
+  border-radius: 8px;
+}
+
+.overview .goals h3 {
+  margin-bottom: 10px;
+  color: #27ae60;
+}
+
+.overview ul {
+  margin-left: 20px;
+  list-style: disc;
+}
+
+.overview ul li {
+  margin-bottom: 8px;
+  font-size: 0.5rem;
+}
+
+/* SOURCE CODE */
+#source {
+  max-width: 800px;
+  margin: 1px 1px;
+  background: #fff;
+  padding-top: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: 1px solid black;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  text-align: center;
+
+  /* Biar isi full satu layar */
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+/* FOOTER */
 .footer-social {
   text-align: center;
   padding: 10px;

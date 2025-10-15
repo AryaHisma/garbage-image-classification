@@ -50,9 +50,7 @@ async function loadModel() {
 
 loadModel();
 
-// =============================
-//   UPLOAD HANDLER
-// =============================
+// --- UPLOAD HANDLER ---
 document.getElementById('fileInput').addEventListener('change', (event) => {
   const file = event.target.files[0];
   if (!file) return;
@@ -73,9 +71,7 @@ document.getElementById('fileInput').addEventListener('change', (event) => {
 });
 
 
-// =============================
-//   CAMERA HANDLER (2 tahap)
-// =============================
+// --- CAMERA HANDLER (2 tahap) ---
 let stream = null;
 let videoElement = null;
 
@@ -166,9 +162,7 @@ document.getElementById('cameraBtn').addEventListener('click', async () => {
 
 
 
-// =============================
-//   INFERENCE PIPELINE
-// =============================
+// --- INFERENCE PIPELINE ---
 async function runInference(imgElement) {
   if (!session) {
     const container = document.getElementById("predictionsList");
@@ -258,13 +252,22 @@ async function runInference(imgElement) {
 }
 
 
+// --- MOVING PAGE ---
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(div => {
+        div.style.display = 'none';
+    });
+    document.getElementById(pageId).style.display = 'block';
+}
 
 
+// --- SELECT LANGUAGE ---
+function setLanguage(lang) {
+    document.querySelectorAll('.lang').forEach(el => el.style.display = 'none');
+    document.querySelector('.lang-' + lang).style.display = 'block';
+}
 
-
-// =============================
-//   FEEDBACK HANDLER
-// =============================
+// --- FEEDBACK HANDLER ---
 document.getElementById('btnCorrect').addEventListener('click', () => {
   alert("Terima kasih! Model dianggap benar ✅");
 });
@@ -278,6 +281,18 @@ document.getElementById('submitCorrection').addEventListener('click', () => {
   if (val) alert(`Feedback disimpan: kategori seharusnya "${val}"`);
 });
 
+const btnWrong = document.getElementById("btnWrong");
+const correctionSection = document.getElementById("correctionSection");
+
+btnWrong.addEventListener("click", () => {
+  correctionSection.classList.toggle("hidden");
+});
+
+
+const btnCorrect = document.getElementById("btnCorrect");
+btnCorrect.addEventListener("click", () => {
+  correctionSection.classList.add("hidden");
+});
 
 
 
@@ -303,56 +318,3 @@ document.getElementById('submitCorrection').addEventListener('click', () => {
 
 
 
-/*
-// --- Mock prediction (replace with real inference call) ---
-async function predictImage(file){
-// show loading
-predClass.textContent = 'Predicting...'; confBar.style.width = '0%'; confText.textContent=''; feedbackControls.classList.add('hidden');
-
-
-// simulate wait
-await new Promise(r=>setTimeout(r,700));
-
-
-// simulate prediction (random) — replace this block to call your model endpoint
-const predicted = CLASSES[Math.floor(Math.random()*CLASSES.length)];
-const confidence = Math.floor(60 + Math.random()*38); // 60-98
-
-
-// render
-predClass.textContent = predicted;
-confBar.style.width = confidence + '%';
-confText.textContent = confidence + '% confidence';
-feedbackControls.classList.remove('hidden');
-
-
-// save a prediction entry for stats
-saveEntry({type:'pred', predicted, confidence, ts:new Date().toISOString()});
-
-
-// preselect correction dropdown default to first non-equal class
-correctSelect.selectedIndex = 0;
-
-
-// attach quick feedback handlers
-btnCorrect.onclick = ()=>{
-saveEntry({type:'feedback', pred:predicted, predicted:predicted, correct:true, ts:new Date().toISOString()});
-alert('Terima kasih, feedback dicatat: model dinyatakan tepat.');
-};
-btnWrong.onclick = ()=>{
-// open correction selector visually
-correctSelect.focus();
-};
-
-
-submitCorrection.onclick = ()=>{
-const correct = correctSelect.value;
-if(!correct){ alert('Pilih kategori yang benar terlebih dahulu.'); return; }
-saveEntry({type:'feedback', pred:predicted, predicted:predicted, correct:false, correctLabel:correct, ts:new Date().toISOString()});
-alert('Terima kasih, koreksi telah dikirim.');
-};
-}
-
-
-// helper: reset (not shown) but could be added
-*/
